@@ -1,21 +1,23 @@
 import { ProductsType } from '../redux/services-redux/Poducts/types';
 import { FiShoppingBag } from 'react-icons/fi';
 import { CardProducStyle } from '../components/styles/CardProductStyle';
+import toast from 'react-hot-toast';
 
 interface ProducsPropTypes {
   products: ProductsType;
   setAllItems: (item: ProductsType[]) => void;
   allItems: ProductsType[];
-  setTotalPriceItems: (value: number) => void;
-  totalPriceItems: number;
+  setCounterClickItem: (counter: number) => void;
+  couterClickItem: number
 }
 export const CardProducts: React.FC<ProducsPropTypes> = ({
   products,
   allItems,
   setAllItems,
-  setTotalPriceItems,
-  totalPriceItems,
+  setCounterClickItem,
+  couterClickItem,
 }) => {
+
   return (
     <CardProducStyle id={`${products.id}`}>
       <section>
@@ -37,8 +39,11 @@ export const CardProducts: React.FC<ProducsPropTypes> = ({
         type="button"
         data-testid="add-item"
         onClick={() => {
-          setAllItems([...allItems, { ...products }]);
-          setTotalPriceItems(totalPriceItems + Number(products.price))
+         if (allItems.length < 0 || allItems.includes(products) === false) {
+          setAllItems([...allItems, products])
+          return setCounterClickItem(couterClickItem + 1)
+         }
+         toast.error('Para adiconar mais quantidades entre no carrinho')
         }}
       >
         <FiShoppingBag />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IconX } from '../components/styles/CartItemsStyle';
 import { CartItemsStyle } from '../components/styles/CartItemsStyle';
 import { ProductsType } from '../redux/services-redux/Poducts/types';
@@ -7,26 +7,27 @@ import { CardItem } from './CardItem';
 interface PropsState {
   setIsOpenMenu: (status: boolean) => void;
   allItems: ProductsType[];
-  totalPriceItems: number
-  setTotalPriceItems: (value: number) => void;
   setAllItems: (item: ProductsType[]) => void;
+  couterClickItem: number;
+  setCounterClickItem: (counter: number) => void
 }
 
 export const CartItems: React.FC<PropsState> = ({
   setIsOpenMenu,
   allItems,
-  totalPriceItems,
-  setTotalPriceItems,
-  setAllItems
+  setAllItems,
 }) => {
-  const [counterItem, setCounterItem] = useState<number>(1);
+  const [totalPriceItems, setTotalPriceItems] = useState<number>(0)
 
-  function removeCard(id:string): void {
-    const filteredCards = allItems.filter((_item, index ) => index !== Number(id))
+  function removeCard(id: number): void {
+    const filteredCards = allItems.filter((item) => item.id !== id)
     setAllItems(filteredCards)
-    console.log(counterItem)
-    setTotalPriceItems(filteredCards.reduce((prev,curr) => prev + (Number(curr.price) * counterItem), 0))
   }
+
+  useEffect(() => {
+    const total = allItems.reduce((prev,curr) => prev + Number(curr.price), 0)
+    setTotalPriceItems(total)
+  }, [allItems, setTotalPriceItems,])
   
   return (
     <CartItemsStyle>
@@ -41,12 +42,9 @@ export const CartItems: React.FC<PropsState> = ({
         </header>
 
         <main>
-          {allItems.map((item, index) => (
+          {allItems.map((item) => (
             <CardItem
-              key={index}
-              id={`${index}`}
-              counterItem={counterItem}
-              setCounterItem={setCounterItem}
+              key={item.id}
               removeCard={removeCard}
               data={item}
               setTotalPriceItems={setTotalPriceItems}

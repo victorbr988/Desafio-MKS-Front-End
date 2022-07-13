@@ -19,15 +19,14 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const[openMenu, setIsOpenMenu] = useState<boolean>(false)
   const [allItems, setAllItems] = useState<ProductsType[]>([])
-  const [totalPriceItems, setTotalPriceItems] = useState<number>(0)
   const products = useApiSelector(({ reducerProducts }) => reducerProducts);
+  const [couterClickItem, setCounterClickItem] = useState(0)
 
   useEffect(() => {
     const { requestAPiMks } = actions;
 
     dispatch(requestAPiMks());
   }, [dispatch]);
-
   return (
     <div className="App">
       <HeaderStyles>
@@ -35,29 +34,29 @@ const App: React.FC = () => {
           MKS <span>Sistemas</span>
         </h1>
         <button type="button" onClick={() => setIsOpenMenu(true)}>
-          <FiShoppingCart/> {allItems.length}
+          <FiShoppingCart/> {couterClickItem}
         </button>
       </HeaderStyles>
       <GroupCardsStyle>
         {products.loading ? <LoadingPanel /> : products.products.map((data) => (
           <CardProducts
-            key={data.id}
+            key={data.id.toString()}
+            couterClickItem={couterClickItem}
+            setCounterClickItem={setCounterClickItem}
             products={data}
             setAllItems={setAllItems}
             allItems={allItems}
-            totalPriceItems={totalPriceItems}
-            setTotalPriceItems={setTotalPriceItems}
           />
         ))}
       </GroupCardsStyle>
 
       {
         openMenu && <CartItems
+          setCounterClickItem={setCounterClickItem}
+          couterClickItem={couterClickItem}
           allItems={allItems}
           setAllItems={setAllItems}
           setIsOpenMenu={setIsOpenMenu}
-          totalPriceItems={totalPriceItems}
-          setTotalPriceItems={setTotalPriceItems}
         />
       }
       

@@ -7,7 +7,7 @@ export const CartItemsStyle = styled.div`
   right: 0;
   background-color: #0F52BA;
   height: 100%;
-  width: 28rem;
+  width: 90%;
   box-shadow: 0px 10px 15px 3px rgba(0,0,0,0.3);
 
   .content_sidebar {
@@ -67,6 +67,9 @@ export const CartItemsStyle = styled.div`
       cursor: pointer;
     }
 
+  }
+  @media (min-width: 650px) {
+    width: 28rem;
   }
 `
 export const IconX = styled(FiX) `
